@@ -5,40 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d0d0d">
 <title>F1 Companion</title>
 <link rel="apple-touch-icon" href="/icon-180.png">
-<link rel="icon" type="image/svg+xml" href="/icon.svg">
-<meta name="apple-mobile-web-app-title" content="F1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-/* Dark (default) */
 :root{
   --bg:#0d0d0d;--s1:#181818;--s2:#202020;--bd:#2a2a2a;--bd2:#3a3a3a;
-  --tx:#f0f0f0;--tx2:#b8b8b8;--mt:#666;--muted-log:#6e6e6e;
+  --tx:#f0f0f0;--tx2:#b8b8b8;--mt:#666;--mlog:#6e6e6e;
   --green:#00c853;--yellow:#ffd600;--red:#e8001f;
   --orange:#ff6d00;--purple:#9c27b0;--blue:#2196f3;
   --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
 }
-/* Light */
 .light{
   --bg:#f2f2f7;--s1:#ffffff;--s2:#e8e8ed;--bd:#d1d1d6;--bd2:#c7c7cc;
-  --tx:#111111;--tx2:#555555;--mt:#888888;--muted-log:#bbbbbb;
+  --tx:#111111;--tx2:#555555;--mt:#888888;--mlog:#aaaaaa;
 }
-
 html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow Condensed',sans-serif;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;user-select:none;transition:background .25s,color .25s}
 .app{display:flex;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;overflow:hidden}
 
-/* ── Header — single row ── */
-.hdr{flex-shrink:0;border-bottom:1px solid var(--bd);background:var(--bg);z-index:10;}
-.hdr-row1{display:flex;align-items:center;gap:8px;padding:calc(var(--safe-top)+10px) 12px 8px;}
-.hdr-row2{padding:6px 12px 9px;border-top:1px solid var(--bd);}
+/* Header */
+.hdr{flex-shrink:0;border-bottom:1px solid var(--bd);background:var(--bg);z-index:10}
+.hdr-row1{display:flex;align-items:center;gap:8px;padding:calc(var(--safe-top)+10px) 12px 8px}
+.hdr-row2{padding:5px 12px 9px;border-top:1px solid var(--bd)}
 .logo{font-size:16px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0;color:var(--tx)}
 .logo em{color:var(--red);font-style:normal}
-.sess-lbl{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.hdr-right{display:flex;align-items:center;gap:7px;flex-shrink:0;margin-left:auto;}
+.hdr-right{display:flex;align-items:center;gap:7px;flex-shrink:0;margin-left:auto}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--mt);transition:all .3s}
 .dot.live{background:var(--green);box-shadow:0 0 7px var(--green)}
 .dot.warn{background:var(--orange)}.dot.err{background:var(--red)}
@@ -48,11 +42,16 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow C
 .hdr-btn:active{transform:scale(.97)}
 .hdr-btn.go{background:var(--green);color:#000}
 .hdr-btn.stop-btn{background:var(--red);color:#fff}
+.src-badge{font-size:10px;font-family:'IBM Plex Mono',monospace;padding:2px 8px;border-radius:99px;border:1px solid var(--bd);color:var(--mt);background:var(--s2);white-space:nowrap}
+.src-badge.f1{border-color:var(--red);color:var(--red)}
+.sess-lbl{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* ── Tabs / Nav ── */
+/* Tabs */
 .tabs{flex:1;overflow:hidden;position:relative}
 .tab{position:absolute;inset:0;overflow-y:auto;display:none;-webkit-overflow-scrolling:touch}
 .tab.active{display:block}
+
+/* Nav */
 .nav{flex-shrink:0;display:flex;background:var(--s1);border-top:1px solid var(--bd);padding-bottom:var(--safe-bot)}
 .nav-btn{flex:1;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--mt);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .2s;position:relative}
 .nav-btn.active{color:var(--tx)}
@@ -60,10 +59,9 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow C
 .nav-icon{font-size:20px;line-height:1}
 .nbadge{position:absolute;top:5px;right:calc(50% - 22px);background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:99px;min-width:16px;text-align:center;line-height:14px;display:none;font-family:'IBM Plex Mono',monospace}
 .nbadge.on{display:block}
-
 .flash{position:fixed;inset:0;pointer-events:none;z-index:100;opacity:0;transition:opacity .2s}
 
-/* ── Flags tab ── */
+/* Flag tab */
 .flag-hero{padding:28px 20px 22px;text-align:center;border-bottom:1px solid var(--bd);transition:background .4s}
 .flag-icon-big{width:96px;height:96px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:42px;margin:0 auto 14px;border:2px solid transparent;transition:all .35s}
 .flag-name-big{font-size:34px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;line-height:1;color:var(--tx)}
@@ -72,12 +70,9 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow C
 .prog-wrap{height:2px;background:var(--bd)}
 .prog-bar{height:2px;width:0%;transition:width .3s;background:var(--orange)}
 .flag-log{padding:10px 16px 80px;font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.9}
-.ll{color:var(--muted-log)}
-.lf{color:var(--tx);font-weight:500}
-.lw{color:var(--orange)}
-.lr{color:var(--red)}
+.ll{color:var(--mlog)}.lf{color:var(--tx);font-weight:500}.lw{color:var(--orange)}.lr{color:var(--red)}
 
-/* ── Race tab ── */
+/* Race tab */
 .race-hdr{display:grid;grid-template-columns:26px 26px 1fr 64px 52px;gap:4px;padding:6px 16px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--bd);background:var(--s1);position:sticky;top:0;z-index:2}
 .drow{display:grid;grid-template-columns:26px 26px 1fr 64px 52px;gap:4px;padding:9px 16px;border-bottom:1px solid var(--bd);align-items:center}
 .pos-n{font-size:15px;font-weight:900;color:var(--tx2);text-align:center}
@@ -89,7 +84,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow C
 .d-lap{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--tx2);text-align:right}
 .tdc{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;vertical-align:middle}
 
-/* ── Weather tab ── */
+/* Weather */
 .wx-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px}
 .wx-card{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:4px}
 .wx-val{font-size:28px;font-weight:900;line-height:1;color:var(--tx)}
@@ -103,13 +98,12 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow C
 .wx-log-lbl{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--tx2);font-family:'IBM Plex Mono',monospace;margin-bottom:6px;padding-top:4px}
 .wx-log{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--tx2);line-height:1.9}
 
-/* ── Radio tab ── */
+/* Radio */
 .radio-item{padding:12px 16px;border-bottom:1px solid var(--bd)}
 .r-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
 .r-driver{font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--tx)}
 .r-time{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--tx2)}
-.r-play{padding:4px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;cursor:pointer;letter-spacing:.05em;text-transform:uppercase}
-.r-play:active{transform:scale(.96)}
+.r-play{padding:4px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;cursor:pointer;text-transform:uppercase}
 .empty{padding:48px 24px;text-align:center;color:var(--tx2);font-size:13px;font-family:'IBM Plex Mono',monospace;line-height:2}
 
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.83}}
@@ -119,11 +113,11 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow C
 <body>
 <div class="app">
 
-<!-- Two-row header -->
 <div class="hdr">
   <div class="hdr-row1">
     <div class="logo"><em>F1</em> Companion</div>
     <div class="hdr-right">
+      <span class="src-badge" id="srcBadge">—</span>
       <div class="dot" id="dot"></div>
       <span class="conn-txt" id="connTxt">offline</span>
       <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀️</button>
@@ -143,17 +137,17 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow C
     <div class="flag-hero" id="flagHero">
       <div class="flag-icon-big" id="flagIcon">·</div>
       <div class="flag-name-big" id="flagName">No Session</div>
-      <div class="flag-desc-big" id="flagDesc">connect to OpenF1 to begin</div>
+      <div class="flag-desc-big" id="flagDesc">connect to begin</div>
       <div class="flag-ts" id="flagTs">waiting</div>
     </div>
     <div class="prog-wrap"><div class="prog-bar" id="prog"></div></div>
     <div class="flag-log" id="flagLog">
-      <div class="ll">F1 Companion · OpenF1 API</div>
+      <div class="ll">F1 Companion · Dual source</div>
       <div class="ll">──────────────────────────────</div>
-      <div class="ll">🚩 Flags   race_control · 5s</div>
-      <div class="ll">🏎 Race    position · intervals · laps · 20s</div>
-      <div class="ll">☁️ Weather  weather · 90s</div>
-      <div class="ll">📻 Radio   team_radio · 30s</div>
+      <div class="ll">Primary: F1 SignalR direct feed (free)</div>
+      <div class="ll">  wss://livetiming.formula1.com/signalrcore</div>
+      <div class="ll">  Flags · Weather · Positions · Radio</div>
+      <div class="ll">Fallback: OpenF1 REST API (historical only)</div>
       <div class="ll">──────────────────────────────</div>
     </div>
   </div>
@@ -161,19 +155,19 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow C
   <!-- RACE -->
   <div class="tab" id="tab-race">
     <div class="race-hdr"><div>P</div><div>#</div><div>Driver</div><div style="text-align:right">Gap</div><div style="text-align:right">Lap</div></div>
-    <div id="raceList"><div class="empty">Connect to OpenF1<br>to see live positions</div></div>
+    <div id="raceList"><div class="empty">Connect to begin</div></div>
   </div>
 
   <!-- WEATHER -->
   <div class="tab" id="tab-weather">
-    <div class="wx-grid" id="wxGrid"><div class="empty" style="grid-column:1/-1">Connect to OpenF1<br>to see weather</div></div>
+    <div class="wx-grid" id="wxGrid"><div class="empty" style="grid-column:1/-1">Connect to begin</div></div>
     <div class="hum-wrap" id="humWrap" style="display:none"><div class="hum-lbl">Humidity</div><div class="hum-bg"><div class="hum-fill" id="humFill" style="width:0%"></div></div></div>
     <div class="wx-log-wrap" id="wxLogWrap" style="display:none"><div class="wx-log-lbl">Weather log</div><div class="wx-log" id="wxLog"></div></div>
   </div>
 
   <!-- RADIO -->
   <div class="tab" id="tab-radio">
-    <div id="radioList"><div class="empty">Connect to OpenF1<br>to receive team radio</div></div>
+    <div id="radioList"><div class="empty">Connect to begin</div></div>
   </div>
 </div>
 
@@ -186,44 +180,60 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow C
 </div>
 
 <script>
+// ═══════════════════════════════════════════════════════
+// FLAG CONFIG
+// ═══════════════════════════════════════════════════════
 const FC={
-  NONE:     {n:'No Session',  d:'connect to OpenF1',         c:'#222',    i:'·',    p:false},
-  GREEN:    {n:'Track Clear', d:'green flag',                c:'#00c853', i:'🟢',   p:false},
-  YELLOW:   {n:'Yellow Flag', d:'hazard · no overtaking',    c:'#ffd600', i:'🟡',   p:true},
-  DY:       {n:'Dbl Yellow',  d:'serious hazard',            c:'#ffd600', i:'🟡🟡', p:true},
-  RED:      {n:'Red Flag',    d:'session stopped',           c:'#e8001f', i:'🔴',   p:true},
-  SC:       {n:'Safety Car',  d:'sc deployed',               c:'#ff6d00', i:'🟠',   p:true},
-  SC_E:     {n:'SC In Lap',   d:'safety car coming in',      c:'#ff6d00', i:'🟠',   p:true},
-  VSC:      {n:'VSC',         d:'virtual safety car',        c:'#9c27b0', i:'🟣',   p:true},
-  CHEQUERED:{n:'Chequered',   d:'session complete',          c:'#ffffff', i:'🏁',   p:false},
+  NONE:     {n:'No Session',  d:'connect to begin',           c:'#222',    i:'·',    p:false},
+  GREEN:    {n:'Track Clear', d:'green flag',                 c:'#00c853', i:'🟢',   p:false},
+  YELLOW:   {n:'Yellow Flag', d:'hazard · no overtaking',     c:'#ffd600', i:'🟡',   p:true},
+  DY:       {n:'Dbl Yellow',  d:'serious hazard',             c:'#ffd600', i:'🟡🟡', p:true},
+  RED:      {n:'Red Flag',    d:'session stopped',            c:'#e8001f', i:'🔴',   p:true},
+  SC:       {n:'Safety Car',  d:'sc deployed',                c:'#ff6d00', i:'🟠',   p:true},
+  SC_E:     {n:'SC In Lap',   d:'safety car coming in',       c:'#ff6d00', i:'🟠',   p:true},
+  VSC:      {n:'VSC',         d:'virtual safety car',         c:'#9c27b0', i:'🟣',   p:true},
+  CHEQUERED:{n:'Chequered',   d:'session complete',           c:'#ffffff', i:'🏁',   p:false},
 };
 const PRI=['NONE','GREEN','CHEQUERED','YELLOW','DY','VSC','SC_E','SC','RED'];
 const TYRE={SOFT:'#e8001f',MEDIUM:'#ffd600',HARD:'#e8e8e8',INTERMEDIATE:'#00c853',WET:'#2196f3'};
-const BASE='https://api.openf1.org/v1';
+// TrackStatus codes from F1 SignalR
+const TRACK_STATUS={
+  '1':'GREEN','2':'YELLOW','4':'SC','5':'RED','6':'VSC','7':'SC_E'
+};
 
-let curFlag='NONE',curTab='flags';
-let liveTimer=null,wxTimer=null,radioTimer=null,raceTimer=null;
-let seenFlag=new Set(),seenRadio=new Set();
-let drivers={},stints={};
-let bdgRace=0,bdgRadio=0,bdgWx=0;
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let curFlag='NONE', curTab='flags', isLight=false;
+let ws=null, wsReconnectTimer=null, wsReconnectDelay=1000;
+let openf1Timer=null, openf1SessTimer=null;
+let seenRadio=new Set(), seenFlag=new Set();
+let drivers={}, stints={}, raceControlMsgs=[];
+let bdgRace=0, bdgRadio=0, bdgWx=0;
 let ac=null;
-let isLight=false;
+let usingSignalR=false;
 
-// ── Theme ─────────────────────────────────────────────
+// Track state from SignalR
+let signalRState={
+  drivers:{}, timing:{}, weather:null, lapCount:null, sessionInfo:null
+};
+
+// ═══════════════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════════════
 function toggleTheme(){
   isLight=!isLight;
   document.body.classList.toggle('light',isLight);
   document.getElementById('themeBtn').textContent=isLight?'🌙':'☀️';
   try{localStorage.setItem('f1theme',isLight?'light':'dark');}catch(e){}
 }
-(function initTheme(){
-  try{
-    const saved=localStorage.getItem('f1theme');
-    if(saved==='light'){isLight=true;document.body.classList.add('light');document.getElementById('themeBtn').textContent='🌙';}
-  }catch(e){}
+(function(){
+  try{if(localStorage.getItem('f1theme')==='light'){isLight=true;document.body.classList.add('light');document.getElementById('themeBtn').textContent='🌙';}}catch(e){}
 })();
 
-// ── Audio ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// AUDIO
+// ═══════════════════════════════════════════════════════
 function beep(f,d,v=0.28){
   try{
     if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();
@@ -251,18 +261,17 @@ function vibe(f){
   else if(f==='SC'||f==='SC_E')navigator.vibrate([200,80,200]);
   else navigator.vibrate([120]);
 }
-
-// ── Notifications ─────────────────────────────────────
 async function initNotif(){
-  if(!('Notification' in window))return;
-  if(Notification.permission==='default')await Notification.requestPermission();
+  if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission();
 }
 function sendNotif(f){
   if(!('Notification' in window)||Notification.permission!=='granted')return;
-  try{new Notification('F1 '+((FC[f]||FC.NONE).n),{body:(FC[f]||FC.NONE).d,tag:'f1flag',renotify:true,silent:false});}catch(e){}
+  try{new Notification('F1 '+((FC[f]||FC.NONE).n),{body:(FC[f]||FC.NONE).d,tag:'f1flag',renotify:true});}catch(e){}
 }
 
-// ── Tabs ──────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════
 function switchTab(t){
   document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(e=>e.classList.remove('active'));
@@ -280,7 +289,9 @@ function badge(tab,n){
   el.classList.toggle('on',n>0);
 }
 
-// ── Flag UI ───────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// FLAG UI
+// ═══════════════════════════════════════════════════════
 function setFlagUI(f){
   const c=FC[f]||FC.NONE;
   const icon=document.getElementById('flagIcon');
@@ -291,18 +302,21 @@ function setFlagUI(f){
   icon.className='flag-icon-big'+(c.p?' pulsing':'');
   document.getElementById('flagName').textContent=c.n;
   document.getElementById('flagDesc').textContent=c.d;
-  document.getElementById('flagHero').style.background=
-    c.c==='#222'?'':(`radial-gradient(ellipse at center, ${c.c}12 0%, transparent 65%)`);
+  document.getElementById('flagHero').style.background=c.c==='#222'?'':(`radial-gradient(ellipse at center, ${c.c}12 0%, transparent 65%)`);
   if(f!=='NONE'){
     const fl=document.getElementById('flash');
     fl.style.background=c.c;fl.style.opacity='0.15';
     setTimeout(()=>fl.style.opacity='0',380);
   }
 }
-function setFlagTs(t){document.getElementById('flagTs').textContent=t;}
 function setConn(s,label){
   document.getElementById('dot').className='dot'+(s==='live'?' live':s==='warn'?' warn':s==='err'?' err':'');
   document.getElementById('connTxt').textContent=label||s;
+}
+function setSrc(label,isF1){
+  const el=document.getElementById('srcBadge');
+  el.textContent=label;
+  el.className='src-badge'+(isF1?' f1':'');
 }
 function addLog(msg,cls='ll'){
   const log=document.getElementById('flagLog');
@@ -314,8 +328,259 @@ function addLog(msg,cls='ll'){
   if(atBot)log.scrollTop=log.scrollHeight;
 }
 
-// ── Flag logic ────────────────────────────────────────
-function detFlag(msg){
+// ═══════════════════════════════════════════════════════
+// FLAG LOGIC
+// ═══════════════════════════════════════════════════════
+function applyFlag(f,source){
+  if(!f)return;
+  const cp=PRI.indexOf(curFlag),np=PRI.indexOf(f);
+  if(f!=='GREEN'&&f!=='CHEQUERED'&&np<=cp&&!(f==='SC_E'&&curFlag==='SC'))return;
+  if(curFlag===f)return;
+  const prev=curFlag;curFlag=f;
+  setFlagUI(f);alertSound(f);vibe(f);sendNotif(f);
+  addLog('★ '+prev+' → '+f+' ['+(source||'?')+']','lf');
+  document.getElementById('flagTs').textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' BST';
+}
+
+// Parse F1 TrackStatus message — this is the cleanest flag source
+function parseTrackStatus(data){
+  const status=typeof data==='object'?data.Status:data;
+  const mapped=TRACK_STATUS[String(status)];
+  if(mapped)applyFlag(mapped,'SignalR:TrackStatus');
+}
+
+// Parse RaceControlMessages from SignalR
+function parseRaceControl(data){
+  const msgs=data.Messages||[];
+  msgs.forEach(m=>{
+    const k=(m.Utc||'')+(m.Message||'');
+    if(seenFlag.has(k))return;
+    seenFlag.add(k);
+    const txt=(m.Message||'').toUpperCase();
+    const flag=(m.Flag||'').toUpperCase();
+    const scope=(m.Scope||'').toUpperCase();
+    const cat=(m.Category||'').toUpperCase();
+    const t=(m.Utc||'').slice(11,19);
+    // Driver-specific flags — skip
+    if(m.RacingNumber)return;
+    if(cat==='SESSIONSTATUS')return;
+    // Log it
+    if(flag||cat==='SAFETYCAR')addLog('['+t+'] ['+flag+'] '+txt.slice(0,55),'lf');
+    else addLog('['+t+'] '+txt.slice(0,60));
+    // Detect flag
+    if(txt.includes('SAFETY CAR IN THIS LAP'))applyFlag('SC_E','SignalR:RC');
+    else if(txt.includes('SAFETY CAR DEPLOYED'))applyFlag('SC','SignalR:RC');
+    else if(txt.includes('VIRTUAL SAFETY CAR DEPLOYED'))applyFlag('VSC','SignalR:RC');
+    else if(flag==='RED')applyFlag('RED','SignalR:RC');
+    else if(flag==='DOUBLE YELLOW')applyFlag('DY','SignalR:RC');
+    else if(flag==='YELLOW')applyFlag('YELLOW','SignalR:RC');
+    else if(flag==='CHEQUERED')applyFlag('CHEQUERED','SignalR:RC');
+    else if((flag==='GREEN'||flag==='CLEAR')&&(scope==='TRACK'||txt==='TRACK CLEAR'||txt.includes('GREEN LIGHT')))applyFlag('GREEN','SignalR:RC');
+  });
+}
+
+// Parse WeatherData from SignalR
+function parseWeather(data){
+  if(!data)return;
+  const w={
+    air_temperature:parseFloat(data.AirTemp),
+    track_temperature:parseFloat(data.TrackTemp),
+    humidity:parseFloat(data.Humidity),
+    wind_speed:parseFloat(data.WindSpeed),
+    wind_direction:parseFloat(data.WindDirection),
+    pressure:parseFloat(data.Pressure),
+    rainfall:data.Rainfall==='1'||data.Rainfall===true||data.Rainfall==='true',
+    date:new Date().toISOString(),
+  };
+  renderWeather(w);
+}
+
+// Parse TimingData from SignalR — positions and gaps
+function parseTimingData(data){
+  if(!data||!data.Lines)return;
+  Object.entries(data.Lines).forEach(([num,d])=>{
+    if(!signalRState.drivers[num])signalRState.drivers[num]={};
+    const s=signalRState.drivers[num];
+    if(d.Position!==undefined)s.position=parseInt(d.Position);
+    if(d.GapToLeader!==undefined)s.gap=d.GapToLeader;
+    if(d.IntervalToPositionAhead)s.interval=d.IntervalToPositionAhead.Value||d.IntervalToPositionAhead;
+    if(d.NumberOfLaps!==undefined)s.lap=d.NumberOfLaps;
+  });
+  renderRaceFromSignalR();
+}
+
+// Parse TimingAppData — tyre info
+function parseTimingAppData(data){
+  if(!data||!data.Lines)return;
+  Object.entries(data.Lines).forEach(([num,d])=>{
+    if(!signalRState.drivers[num])signalRState.drivers[num]={};
+    if(d.Stints&&d.Stints.length>0){
+      const last=d.Stints[d.Stints.length-1];
+      signalRState.drivers[num].tyre=last.Compound||'—';
+    }
+  });
+}
+
+// Parse DriverList from SignalR
+function parseDriverList(data){
+  if(!data)return;
+  Object.entries(data).forEach(([num,d])=>{
+    if(!signalRState.drivers[num])signalRState.drivers[num]={};
+    if(d.Tla)signalRState.drivers[num].abbr=d.Tla;
+    if(d.TeamName)signalRState.drivers[num].team=d.TeamName;
+    if(d.TeamColour)signalRState.drivers[num].col=d.TeamColour;
+  });
+}
+
+// Parse SessionInfo from SignalR
+function parseSessionInfo(data){
+  if(!data)return;
+  const name=(data.Name||'');
+  const meeting=(data.Meeting&&data.Meeting.Name)||'';
+  document.getElementById('sessLbl').textContent=(meeting?meeting+' · ':'')+name;
+}
+
+// Render race list from SignalR state
+function renderRaceFromSignalR(){
+  const list=document.getElementById('raceList');
+  const driverArr=Object.entries(signalRState.drivers)
+    .filter(([,d])=>d.position)
+    .sort((a,b)=>a[1].position-b[1].position);
+  if(!driverArr.length)return;
+  list.innerHTML='';
+  driverArr.forEach(([num,d])=>{
+    const tc=TYRE[d.tyre]||'#555';
+    const pc=d.position===1?'p1':d.position===2?'p2':d.position===3?'p3':'';
+    const gap=d.position===1?'LEADER':(d.gap||d.interval||'—');
+    const row=document.createElement('div');row.className='drow';
+    row.innerHTML=`
+      <div class="pos-n ${pc}">${d.position}</div>
+      <div style="font-size:11px;font-weight:700;color:#${d.col||'888888'};text-align:center;font-family:'IBM Plex Mono',monospace">${num}</div>
+      <div><div class="d-abbr">${d.abbr||'#'+num}</div><div class="d-team"><span class="tdc" style="background:${tc}"></span>${(d.team||'').split(' ')[0]}</div></div>
+      <div class="d-gap ${d.position===1?'ldr':''}">${gap}</div>
+      <div class="d-lap">L${d.lap||'—'}</div>`;
+    list.appendChild(row);
+  });
+  if(curTab!=='race'){bdgRace++;badge('race',bdgRace);}
+}
+
+// ═══════════════════════════════════════════════════════
+// F1 SIGNALR CONNECTION
+// ═══════════════════════════════════════════════════════
+const SIGNALR_NEGOTIATE='https://livetiming.formula1.com/signalrcore/negotiate?negotiateVersion=1';
+const SIGNALR_WS='wss://livetiming.formula1.com/signalrcore';
+const TOPICS=['RaceControlMessages','TrackStatus','WeatherData','TimingData','TimingAppData','DriverList','SessionInfo','SessionStatus','LapCount','ExtrapolatedClock'];
+
+async function negotiateSignalR(){
+  const r=await fetch(SIGNALR_NEGOTIATE,{method:'POST'});
+  if(!r.ok)throw new Error('Negotiate failed: '+r.status);
+  return r.json();
+}
+
+function connectSignalR(){
+  if(ws){ws.close();ws=null;}
+  addLog('Connecting to F1 SignalR…','lf');
+
+  negotiateSignalR().then(neg=>{
+    const token=encodeURIComponent(neg.connectionToken||'');
+    const url=SIGNALR_WS+'?id='+token;
+    ws=new WebSocket(url);
+
+    ws.onopen=()=>{
+      addLog('SignalR WebSocket open','lf');
+      // SignalR Core protocol handshake
+      ws.send(JSON.stringify({protocol:'json',version:1})+'\x1e');
+    };
+
+    ws.onmessage=e=>{
+      // Messages are delimited by \x1e (record separator)
+      const parts=e.data.split('\x1e').filter(Boolean);
+      parts.forEach(part=>{
+        if(!part.trim())return;
+        let msg;
+        try{msg=JSON.parse(part);}catch(err){return;}
+
+        // Handshake response — send subscription
+        if(msg.type===undefined&&(msg.error!==undefined||Object.keys(msg).length===0||msg.connectionId)){
+          // Connection established — subscribe to topics
+          ws.send(JSON.stringify({
+            arguments:[TOPICS],
+            invocationId:'0',
+            target:'Subscribe',
+            type:1
+          })+'\x1e');
+          setConn('live','SignalR');
+          setSrc('F1 Live',true);
+          usingSignalR=true;
+          wsReconnectDelay=1000;
+          addLog('Subscribed to '+TOPICS.length+' F1 topics','lf');
+          return;
+        }
+
+        // Feed messages — type 1 = invocation
+        if(msg.type===1&&msg.target==='feed'&&msg.arguments){
+          const [updates]=msg.arguments;
+          if(!updates)return;
+          Object.entries(updates).forEach(([topic,data])=>{
+            switch(topic){
+              case'TrackStatus':      parseTrackStatus(data);break;
+              case'RaceControlMessages': parseRaceControl(data);break;
+              case'WeatherData':      parseWeather(data);break;
+              case'TimingData':       parseTimingData(data);break;
+              case'TimingAppData':    parseTimingAppData(data);break;
+              case'DriverList':       parseDriverList(data);break;
+              case'SessionInfo':      parseSessionInfo(data);break;
+              case'LapCount':
+                if(data&&data.CurrentLap)addLog('Lap '+data.CurrentLap+(data.TotalLaps?' / '+data.TotalLaps:''));
+                break;
+              case'SessionStatus':
+                if(data&&data.Status){
+                  addLog('Session: '+data.Status);
+                  if(data.Status==='Finished')applyFlag('CHEQUERED','SignalR:Session');
+                }
+                break;
+            }
+          });
+        }
+
+        // Ping — respond with pong
+        if(msg.type===6){ws.send(JSON.stringify({type:6})+'\x1e');}
+      });
+    };
+
+    ws.onerror=e=>{
+      addLog('SignalR error','lr');
+      setConn('err','error');
+    };
+
+    ws.onclose=e=>{
+      addLog('SignalR closed ('+e.code+') — reconnecting in '+(wsReconnectDelay/1000)+'s','lw');
+      setConn('warn','reconnecting');
+      usingSignalR=false;
+      if(wsReconnectTimer)clearTimeout(wsReconnectTimer);
+      wsReconnectTimer=setTimeout(()=>{connectSignalR();},wsReconnectDelay);
+      wsReconnectDelay=Math.min(wsReconnectDelay*2,30000);
+    };
+
+  }).catch(err=>{
+    addLog('Negotiate failed: '+err.message+' — falling back to OpenF1','lw');
+    setSrc('OpenF1',false);
+    startOpenF1Fallback();
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// OPENF1 FALLBACK (historical / between sessions)
+// ═══════════════════════════════════════════════════════
+const BASE='https://api.openf1.org/v1';
+async function api(path){
+  const r=await fetch(BASE+path);
+  if(!r.ok)throw new Error(r.status);
+  return r.json();
+}
+
+// OpenF1 flag logic (same as before)
+function detFlagOpenF1(msg){
   const flag=(msg.flag||'').toUpperCase(),txt=(msg.message||'').toUpperCase(),
         scope=(msg.scope||'').toUpperCase(),cat=(msg.category||'').toUpperCase();
   if(msg.driver_number!==null&&msg.driver_number!==undefined)return null;
@@ -323,205 +588,134 @@ function detFlag(msg){
   if(txt.includes('SAFETY CAR IN THIS LAP'))return'SC_E';
   if(txt.includes('SAFETY CAR DEPLOYED'))return'SC';
   if(txt.includes('VIRTUAL SAFETY CAR DEPLOYED')||txt.includes('VIRTUAL SAFETY CAR ENDING'))return'VSC';
-  if(txt.includes('SAFETY CAR ENDING'))return'SC_E';
   if(flag==='RED')return'RED';
   if(flag==='DOUBLE YELLOW')return'DY';
   if(flag==='YELLOW')return'YELLOW';
   if(flag==='CHEQUERED')return'CHEQUERED';
-  if(flag==='GREEN'||flag==='CLEAR'){
-    if(scope==='TRACK'||txt==='TRACK CLEAR'||txt.includes('GREEN LIGHT'))return'GREEN';
-    return null;
-  }
+  if((flag==='GREEN'||flag==='CLEAR')&&(scope==='TRACK'||txt==='TRACK CLEAR'||txt.includes('GREEN LIGHT')))return'GREEN';
   return null;
 }
-function applyFlag(f){
-  if(!f)return;
-  const cp=PRI.indexOf(curFlag),np=PRI.indexOf(f);
-  if(f!=='GREEN'&&f!=='CHEQUERED'&&np<=cp&&!(f==='SC_E'&&curFlag==='SC'))return;
-  if(curFlag===f)return;
-  const prev=curFlag;curFlag=f;
-  setFlagUI(f);alertSound(f);vibe(f);sendNotif(f);
-  addLog('★ '+prev+' → '+f+' — '+(FC[f]||{}).n,'lf');
-  setFlagTs(new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' BST');
-}
 
-// ── API ───────────────────────────────────────────────
-async function api(path){
-  const r=await fetch(BASE+path);
-  if(!r.ok)throw new Error(r.status);
-  return r.json();
-}
-
-// ── Session check (cached 30s) ────────────────────────
 let lastSessCheck=0,lastSessOk=false;
-async function checkSessionCached(){
-  const now=Date.now();
-  if(now-lastSessCheck<30000)return lastSessOk;
+async function pollOpenF1Flags(){
   try{
-    const sess=(await api('/sessions?session_key=latest'))[0];
-    lastSessCheck=now;
-    if(!sess){lastSessOk=false;document.getElementById('sessLbl').textContent='No session found';return false;}
-    const de=sess.date_end?new Date(sess.date_end):null;
-    lastSessOk=!de||de>new Date();
-    const sname=(sess.circuit_short_name||sess.location||'')+' · '+(sess.session_name||'');
-    document.getElementById('sessLbl').textContent=sname+(lastSessOk?'':' · ended');
-    return lastSessOk;
-  }catch(e){lastSessOk=false;return false;}
-}
-
-// ── Poll: Flags ───────────────────────────────────────
-async function pollFlags(){
-  try{
-    const live=await checkSessionCached();
-    if(!live){setConn('warn','no session');return;}
+    const now=Date.now();
+    if(now-lastSessCheck>30000){
+      const sess=(await api('/sessions?session_key=latest'))[0];
+      lastSessCheck=now;
+      if(!sess){setConn('warn','no session');return;}
+      const de=sess.date_end?new Date(sess.date_end):null;
+      lastSessOk=!de||de>new Date();
+      const sname=(sess.circuit_short_name||'')+' · '+(sess.session_name||'');
+      document.getElementById('sessLbl').textContent=sname+(lastSessOk?'':' · ended');
+    }
+    if(!lastSessOk){setConn('warn','session ended');return;}
     const msgs=await api('/race_control?session_key=latest');
     const fresh=msgs.filter(m=>{const k=(m.date||'')+(m.message||'');if(seenFlag.has(k))return false;seenFlag.add(k);return true;});
-    setConn('live','live');
+    setConn('live','OpenF1');setSrc('OpenF1',false);
     fresh.forEach(m=>{
-      const f=detFlag(m),t=(m.date||'').slice(11,19),isD=m.driver_number!==null&&m.driver_number!==undefined;
-      if(f){addLog('['+t+'] ★ '+(m.message||'').slice(0,58),'lf');applyFlag(f);}
+      const f=detFlagOpenF1(m),t=(m.date||'').slice(11,19);
+      const isD=m.driver_number!==null&&m.driver_number!==undefined;
+      if(f){addLog('['+t+'] ★ '+(m.message||'').slice(0,55),'lf');applyFlag(f,'OpenF1');}
       else if(!isD&&m.message)addLog('['+t+'] '+(m.message||'').slice(0,60));
     });
-  }catch(e){setConn('err','error');addLog('API error: '+e.message,'lr');}
+  }catch(e){
+    // If 401/403 during live session, SignalR is better anyway
+    addLog('OpenF1: '+e.message,'lr');
+    setConn('warn','OpenF1 blocked');
+  }
 }
 
-// ── Poll: Race ────────────────────────────────────────
-async function fetchDrivers(){
-  try{(await api('/drivers?session_key=latest')).forEach(d=>{drivers[d.driver_number]={abbr:d.name_acronym,team:d.team_name,col:d.team_colour||'888888'};});}catch(e){}
-}
-async function fetchStints(){
-  try{(await api('/stints?session_key=latest')).forEach(s=>{if(!stints[s.driver_number]||s.stint_number>stints[s.driver_number].stint_number)stints[s.driver_number]=s;});}catch(e){}
-}
-async function pollRace(){
-  try{
-    const cutoff=encodeURIComponent(new Date(Date.now()-60000).toISOString());
-    const [pos,intv,laps]=await Promise.all([
-      api('/position?session_key=latest&date>'+cutoff),
-      api('/intervals?session_key=latest'),
-      api('/laps?session_key=latest'),
-    ]);
-    fetchStints();
-    const lp={},li={},ll={};
-    pos.forEach(p=>{if(!lp[p.driver_number]||p.date>lp[p.driver_number].date)lp[p.driver_number]=p;});
-    intv.forEach(i=>{if(!li[i.driver_number]||i.date>li[i.driver_number].date)li[i.driver_number]=i;});
-    laps.forEach(l=>{if(!ll[l.driver_number]||l.lap_number>ll[l.driver_number].lap_number)ll[l.driver_number]=l;});
-    const sorted=Object.values(lp).sort((a,b)=>a.position-b.position);
-    if(!sorted.length)return;
-    const list=document.getElementById('raceList');list.innerHTML='';
-    sorted.forEach(p=>{
-      const dn=p.driver_number,dr=drivers[dn]||{abbr:'#'+dn,team:'',col:'888888'};
-      const iv=li[dn],lv=ll[dn],st=stints[dn];
-      const gap=iv?(iv.gap_to_leader!=null?'+'+Number(iv.gap_to_leader).toFixed(3):(iv.interval!=null?'+'+Number(iv.interval).toFixed(3):'—')):'—';
-      const lapN=lv?lv.lap_number:'—';
-      const tyre=st?st.compound:'—';
-      const tc=TYRE[tyre]||'#888';
-      const pc=p.position===1?'p1':p.position===2?'p2':p.position===3?'p3':'';
-      const row=document.createElement('div');row.className='drow';
-      row.innerHTML=`
-        <div class="pos-n ${pc}">${p.position}</div>
-        <div style="font-size:11px;font-weight:700;color:#${dr.col};text-align:center;font-family:'IBM Plex Mono',monospace">${dn}</div>
-        <div><div class="d-abbr">${dr.abbr}</div><div class="d-team"><span class="tdc" style="background:${tc}"></span>${(dr.team||'').split(' ')[0]}</div></div>
-        <div class="d-gap ${p.position===1?'ldr':''}">${p.position===1?'LEADER':gap}</div>
-        <div class="d-lap">L${lapN}</div>`;
-      list.appendChild(row);
-    });
-    if(curTab!=='race'){bdgRace++;badge('race',bdgRace);}
-  }catch(e){}
-}
-
-// ── Poll: Weather ─────────────────────────────────────
-async function pollWeather(){
-  try{
-    const d=await api('/weather?session_key=latest');
-    if(!d.length)return;
-    const w=d[d.length-1];
-    document.getElementById('wxGrid').innerHTML=`
-      <div class="wx-card"><div class="wx-val">${w.air_temperature!=null?w.air_temperature.toFixed(1)+'°':'—'}</div><div class="wx-lbl">Air Temp</div></div>
-      <div class="wx-card"><div class="wx-val">${w.track_temperature!=null?w.track_temperature.toFixed(1)+'°':'—'}</div><div class="wx-lbl">Track Temp</div></div>
-      <div class="wx-card"><div class="wx-val">${w.humidity!=null?Math.round(w.humidity)+'%':'—'}</div><div class="wx-lbl">Humidity</div></div>
-      <div class="wx-card"><div class="wx-val">${w.wind_speed!=null?w.wind_speed.toFixed(1):'—'}</div><div class="wx-lbl">Wind m/s</div><div class="wx-sub">${w.wind_direction!=null?wd(w.wind_direction):''}</div></div>
-      <div class="wx-card"><div class="wx-val">${w.pressure!=null?Math.round(w.pressure):'—'}</div><div class="wx-lbl">Pressure hPa</div></div>
-      <div class="wx-card"><div class="wx-val" style="font-size:20px">${w.rainfall?'🌧️ Rain':'☀️ Dry'}</div><div class="wx-lbl">Rainfall</div></div>`;
-    const h=w.humidity||0;
-    document.getElementById('humWrap').style.display='block';
-    document.getElementById('humFill').style.width=h+'%';
-    document.getElementById('humFill').style.background=h>70?'var(--blue)':h>40?'var(--orange)':'var(--green)';
-    document.getElementById('wxLogWrap').style.display='block';
-    const t=(w.date||'').slice(11,19);
-    const entry=document.createElement('div');
-    entry.textContent=t+'  Air '+w.air_temperature+'° Track '+w.track_temperature+'° Wind '+w.wind_speed+'m/s '+(w.rainfall?'🌧️':'☀️');
-    const wxLog=document.getElementById('wxLog');
-    wxLog.insertBefore(entry,wxLog.firstChild);
-    while(wxLog.children.length>8)wxLog.removeChild(wxLog.lastChild);
-    if(curTab!=='weather'){bdgWx=1;badge('weather',1);}
-  }catch(e){}
+function renderWeather(w){
+  document.getElementById('wxGrid').innerHTML=`
+    <div class="wx-card"><div class="wx-val">${w.air_temperature!=null?w.air_temperature.toFixed(1)+'°':'—'}</div><div class="wx-lbl">Air Temp</div></div>
+    <div class="wx-card"><div class="wx-val">${w.track_temperature!=null?w.track_temperature.toFixed(1)+'°':'—'}</div><div class="wx-lbl">Track Temp</div></div>
+    <div class="wx-card"><div class="wx-val">${w.humidity!=null?Math.round(w.humidity)+'%':'—'}</div><div class="wx-lbl">Humidity</div></div>
+    <div class="wx-card"><div class="wx-val">${w.wind_speed!=null?w.wind_speed.toFixed(1):'—'}</div><div class="wx-lbl">Wind m/s</div><div class="wx-sub">${w.wind_direction!=null?wd(w.wind_direction):''}</div></div>
+    <div class="wx-card"><div class="wx-val">${w.pressure!=null?Math.round(w.pressure):'—'}</div><div class="wx-lbl">Pressure hPa</div></div>
+    <div class="wx-card"><div class="wx-val" style="font-size:20px">${w.rainfall?'🌧️ Rain':'☀️ Dry'}</div><div class="wx-lbl">Rainfall</div></div>`;
+  const h=w.humidity||0;
+  document.getElementById('humWrap').style.display='block';
+  document.getElementById('humFill').style.width=h+'%';
+  document.getElementById('humFill').style.background=h>70?'var(--blue)':h>40?'var(--orange)':'var(--green)';
+  document.getElementById('wxLogWrap').style.display='block';
+  const t=(w.date||'').slice(11,19);
+  const entry=document.createElement('div');
+  entry.textContent=t+'  Air '+w.air_temperature+'° Track '+w.track_temperature+'° Wind '+w.wind_speed+'m/s '+(w.rainfall?'🌧️':'☀️');
+  const wxLog=document.getElementById('wxLog');
+  wxLog.insertBefore(entry,wxLog.firstChild);
+  while(wxLog.children.length>8)wxLog.removeChild(wxLog.lastChild);
+  if(curTab!=='weather'){bdgWx=1;badge('weather',1);}
 }
 function wd(deg){return['N','NE','E','SE','S','SW','W','NW'][Math.round(deg/45)%8];}
 
-// ── Poll: Radio ───────────────────────────────────────
-async function pollRadio(){
+async function pollOpenF1Weather(){
+  try{
+    const d=await api('/weather?session_key=latest');
+    if(d.length)renderWeather(d[d.length-1]);
+  }catch(e){}
+}
+async function pollOpenF1Radio(){
   try{
     const d=await api('/team_radio?session_key=latest');
-    if(!d.length)return;
-    const fresh=d.filter(r=>{const k=(r.date||'')+(r.driver_number||'')+(r.recording_url||'');if(seenRadio.has(k))return false;seenRadio.add(k);return true;});
+    const fresh=d.filter(r=>{const k=(r.date||'')+(r.driver_number||'');if(seenRadio.has(k))return false;seenRadio.add(k);return true;});
     if(!fresh.length)return;
     const list=document.getElementById('radioList');
     if(list.querySelector('.empty'))list.innerHTML='';
     fresh.reverse().forEach(r=>{
-      const dr=drivers[r.driver_number]||{abbr:'#'+r.driver_number,team:'',col:'888888'};
       const t=(r.date||'').slice(11,19);
       const item=document.createElement('div');item.className='radio-item';
-      item.innerHTML=`
-        <div class="r-meta">
-          <div><span class="r-driver" style="color:#${dr.col}">${dr.abbr}</span>
-            <span style="font-size:11px;color:var(--tx2);margin-left:6px;font-family:'IBM Plex Mono',monospace">${(dr.team||'').split(' ')[0]}</span></div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="r-time">${t}</span>
-            ${r.recording_url?`<button class="r-play" onclick="playAudio('${r.recording_url}')">▶ Play</button>`:''}
-          </div>
-        </div>
-        <div style="font-size:11px;color:var(--tx2);font-family:'IBM Plex Mono',monospace">${r.recording_url?'Audio available':'No recording'}</div>`;
+      item.innerHTML=`<div class="r-meta"><div><span class="r-driver">#${r.driver_number}</span></div><div style="display:flex;align-items:center;gap:8px"><span class="r-time">${t}</span>${r.recording_url?`<button class="r-play" onclick="new Audio('${r.recording_url}').play()">▶ Play</button>`:''}</div></div><div style="font-size:11px;color:var(--tx2);font-family:'IBM Plex Mono',monospace">${r.recording_url?'Audio available':'No recording'}</div>`;
       list.insertBefore(item,list.firstChild);
     });
     if(curTab!=='radio'){bdgRadio+=fresh.length;badge('radio',bdgRadio);}
   }catch(e){}
 }
-function playAudio(url){try{new Audio(url).play();}catch(e){addLog('Audio error: '+e.message,'lr');}}
 
-// ── Start / Stop ──────────────────────────────────────
-async function startLive(){
-  seenFlag.clear();seenRadio.clear();stints={};drivers={};lastSessCheck=0;
-  curFlag='NONE';setFlagUI('NONE');setConn('live','connecting…');
+function startOpenF1Fallback(){
+  addLog('OpenF1 fallback active (historical/between sessions)','lw');
+  openf1Timer=setInterval(pollOpenF1Flags,5000);
+  setInterval(pollOpenF1Weather,90000);
+  setInterval(pollOpenF1Radio,30000);
+  pollOpenF1Flags();
+  setTimeout(pollOpenF1Weather,3000);
+  setTimeout(pollOpenF1Radio,6000);
+}
+
+// ═══════════════════════════════════════════════════════
+// START / STOP
+// ═══════════════════════════════════════════════════════
+function toggleLive(){
+  if(ws||openf1Timer){stopAll();}
+  else{startAll();}
+}
+
+function startAll(){
+  curFlag='NONE';setFlagUI('NONE');
+  signalRState={drivers:{},timing:{},weather:null,lapCount:null};
+  seenFlag.clear();seenRadio.clear();
   document.getElementById('btnLive').textContent='■ Disconnect';
   document.getElementById('btnLive').className='hdr-btn stop-btn';
-  document.getElementById('sessLbl').textContent='';
-  addLog('Connecting to OpenF1…','lf');
-  await fetchDrivers();
-  await pollFlags();
-  setTimeout(async()=>{await pollRace();},2000);
-  setTimeout(async()=>{await pollWeather();},4000);
-  setTimeout(async()=>{await pollRadio();},6000);
-  liveTimer=setInterval(pollFlags,5000);
-  raceTimer=setInterval(pollRace,20000);
-  wxTimer=setInterval(pollWeather,90000);
-  radioTimer=setInterval(pollRadio,30000);
-}
-function stopLive(){
-  [liveTimer,raceTimer,wxTimer,radioTimer].forEach(t=>{if(t)clearInterval(t);});
-  liveTimer=raceTimer=wxTimer=radioTimer=null;
-  document.getElementById('btnLive').textContent='▶ Connect';
-  document.getElementById('btnLive').className='hdr-btn go';
-}
-function toggleLive(){
-  if(liveTimer){
-    stopLive();setConn('','offline');
-    curFlag='NONE';setFlagUI('NONE');
-    document.getElementById('sessLbl').textContent='';
-    addLog('Disconnected');
-  }else{startLive();}
+  setConn('live','connecting…');
+  addLog('Starting F1 Companion…','lf');
+  addLog('Attempting F1 SignalR direct feed…');
+  // Try SignalR first — it works during live sessions
+  connectSignalR();
 }
 
-// ── Init ──────────────────────────────────────────────
+function stopAll(){
+  if(ws){ws.onclose=null;ws.close();ws=null;}
+  if(wsReconnectTimer){clearTimeout(wsReconnectTimer);wsReconnectTimer=null;}
+  if(openf1Timer){clearInterval(openf1Timer);openf1Timer=null;}
+  usingSignalR=false;lastSessCheck=0;
+  setConn('','offline');setSrc('—',false);
+  curFlag='NONE';setFlagUI('NONE');
+  document.getElementById('btnLive').textContent='▶ Connect';
+  document.getElementById('btnLive').className='hdr-btn go';
+  document.getElementById('sessLbl').textContent='Waiting for session…';
+  addLog('Disconnected');
+}
+
 setFlagUI('NONE');
 initNotif();
 </script>
