@@ -467,14 +467,19 @@ function renderRaceFromSignalR(){
 // ═══════════════════════════════════════════════════════
 // F1 SIGNALR CONNECTION
 // ═══════════════════════════════════════════════════════
-const SIGNALR_NEGOTIATE='https://livetiming.formula1.com/signalrcore/negotiate?negotiateVersion=1';
-const SIGNALR_WS='wss://livetiming.formula1.com/signalrcore';
+// Old ASP.NET SignalR (not Core) — GET negotiate, no CORS preflight
+const SIGNALR_BASE='https://livetiming.formula1.com/signalr';
+const SIGNALR_HUB=encodeURIComponent(JSON.stringify([{name:'Streaming'}]));
+const SIGNALR_NEGOTIATE=SIGNALR_BASE+'/negotiate?connectionData='+SIGNALR_HUB+'&clientProtocol=1.5';
 const TOPICS=['RaceControlMessages','TrackStatus','WeatherData','TimingData','TimingAppData','DriverList','SessionInfo','SessionStatus','LapCount','ExtrapolatedClock'];
 
 async function negotiateSignalR(){
-  const r=await fetch(SIGNALR_NEGOTIATE,{method:'POST'});
-  if(!r.ok)throw new Error('Negotiate failed: '+r.status);
-  return r.json();
+  // Old SignalR uses GET — no CORS preflight
+  const r=await fetch(SIGNALR_NEGOTIATE,{method:'GET',headers:{'Accept':'application/json'}});
+  if(!r.ok)throw new Error('Negotiate '+r.status);
+  const data=await r.json();
+  addLog('Negotiate response: '+JSON.stringify(data).slice(0,80));
+  return data;
 }
 
 function connectSignalR(){
@@ -482,14 +487,26 @@ function connectSignalR(){
   addLog('Connecting to F1 SignalR…','lf');
 
   negotiateSignalR().then(neg=>{
-    const token=encodeURIComponent(neg.connectionToken||'');
-    const url=SIGNALR_WS+'?id='+token;
+    const token=encodeURIComponent(neg.ConnectionToken||'');
+    const cookie=neg.CookieName?neg.CookieName+'='+neg.ConnectionToken:'';
+    // Old SignalR WebSocket URL format
+    const url='wss://livetiming.formula1.com/signalr/connect'
+      +'?transport=webSockets'
+      +'&clientProtocol=1.5'
+      +'&connectionToken='+token
+      +'&connectionData='+SIGNALR_HUB;
+    addLog('Connecting WS… token: '+token.slice(0,20)+'…');
     ws=new WebSocket(url);
 
     ws.onopen=()=>{
-      addLog('SignalR WebSocket open','lf');
-      // SignalR Core protocol handshake
-      ws.send(JSON.stringify({protocol:'json',version:1})+'\x1e');
+      addLog('WebSocket open ✓ — subscribing…','lf');
+      // Old SignalR subscribe — invoke method on Streaming hub
+      ws.send(JSON.stringify({
+        H:'Streaming',
+        M:'Subscribe',
+        A:[TOPICS],
+        I:0
+      }));
     };
 
     ws.onmessage=e=>{
@@ -517,9 +534,9 @@ function connectSignalR(){
           return;
         }
 
-        // Feed messages — type 1 = invocation
-        if(msg.type===1&&msg.target==='feed'&&msg.arguments){
-          const [updates]=msg.arguments;
+        // Old SignalR message format: {M: 'feed', A: [{topic: data}]}
+        if(msg.M==='feed'&&msg.A&&msg.A[0]){
+          const updates=msg.A[0];
           if(!updates)return;
           Object.entries(updates).forEach(([topic,data])=>{
             switch(topic){
@@ -543,13 +560,14 @@ function connectSignalR(){
           });
         }
 
-        // Ping — respond with pong
-        if(msg.type===6){ws.send(JSON.stringify({type:6})+'\x1e');}
+        // Old SignalR keepalive — server sends {} pings, no response needed
+        if(Object.keys(msg).length===0)return;
       });
     };
 
     ws.onerror=e=>{
-      addLog('SignalR error','lr');
+      addLog('SignalR WS error: '+(e.message||e.type||'unknown'),'lr');
+      addLog('If CORS: SignalR needs a proxy server — cannot run from browser directly','lw');
       setConn('err','error');
     };
 
@@ -563,7 +581,9 @@ function connectSignalR(){
     };
 
   }).catch(err=>{
-    addLog('Negotiate failed: '+err.message+' — falling back to OpenF1','lw');
+    addLog('SignalR negotiate error: '+err.message,'lr');
+    addLog('Likely CORS block — SignalR requires server-side proxy from browser','lw');
+    addLog('Falling back to OpenF1 REST API…','lw');
     setSrc('OpenF1',false);
     startOpenF1Fallback();
   });
