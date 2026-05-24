@@ -125,7 +125,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow C
     </div>
   </div>
   <div class="hdr-row2">
-    <div class="sess-lbl" id="sessLbl">Waiting for session…</div><div style="font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--mt);flex-shrink:0;margin-left:auto">v1.4</div>
+    <div class="sess-lbl" id="sessLbl">Waiting for session…</div><div style="font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--mt);flex-shrink:0;margin-left:auto">v1.5</div>
   </div>
 </div>
 
@@ -470,7 +470,8 @@ function renderRaceFromSignalR(){
 // Old ASP.NET SignalR (not Core) — GET negotiate, no CORS preflight
 const SIGNALR_BASE='https://livetiming.formula1.com/signalr';
 const SIGNALR_HUB=encodeURIComponent(JSON.stringify([{name:'Streaming'}]));
-const SIGNALR_NEGOTIATE=SIGNALR_BASE+'/negotiate?connectionData='+SIGNALR_HUB+'&clientProtocol=1.5';
+const CORS_PROXY='https://corsproxy.io/?url=';
+const SIGNALR_NEGOTIATE=CORS_PROXY+encodeURIComponent(SIGNALR_BASE+'/negotiate?connectionData='+SIGNALR_HUB+'&clientProtocol=1.5');
 const TOPICS=['RaceControlMessages','TrackStatus','WeatherData','TimingData','TimingAppData','DriverList','SessionInfo','SessionStatus','LapCount','ExtrapolatedClock'];
 
 async function negotiateSignalR(){
