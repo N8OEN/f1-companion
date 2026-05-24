@@ -125,7 +125,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Barlow C
     </div>
   </div>
   <div class="hdr-row2">
-    <div class="sess-lbl" id="sessLbl">Waiting for session…</div><div style="font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--mt);flex-shrink:0;margin-left:auto">v1.5</div>
+    <div class="sess-lbl" id="sessLbl">Waiting for session…</div><div style="font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--mt);flex-shrink:0;margin-left:auto">v1.6</div>
   </div>
 </div>
 
@@ -481,6 +481,28 @@ async function negotiateSignalR(){
   const data=await r.json();
   addLog('Negotiate response: '+JSON.stringify(data).slice(0,80));
   return data;
+}
+
+function processFeed(updates){
+  if(!updates||typeof updates!=='object')return;
+  Object.entries(updates).forEach(([topic,data])=>{
+    switch(topic){
+      case'TrackStatus':         parseTrackStatus(data);break;
+      case'RaceControlMessages': parseRaceControl(data);break;
+      case'WeatherData':         parseWeather(data);break;
+      case'TimingData':          parseTimingData(data);break;
+      case'TimingAppData':       parseTimingAppData(data);break;
+      case'DriverList':          parseDriverList(data);break;
+      case'SessionInfo':         parseSessionInfo(data);break;
+      case'LapCount':
+        if(data&&data.CurrentLap)addLog('Lap '+data.CurrentLap+(data.TotalLaps?' / '+data.TotalLaps:''));break;
+      case'SessionStatus':
+        if(data&&data.Status){
+          addLog('Session status: '+data.Status,'lf');
+          if(data.Status==='Finished')applyFlag('CHEQUERED','SignalR:Session');
+        }break;
+    }
+  });
 }
 
 function connectSignalR(){
